@@ -6,6 +6,7 @@
 #include "defs.h"
 #include "x86.h"
 #include "elf.h"
+#include "shell.h"
 
 int
 exec(char *path, char **argv)
@@ -28,6 +29,26 @@ exec(char *path, char **argv)
   }
   ilock(ip);
   pgdir = 0;
+  char shell_path[MAXPATH];
+  if(readi(ip, shell_path, 0, sizeof(shell_path)) < 0)
+    goto bad;
+  if(shell_path[0] == '#' && shell_path[1] == '!') {
+    int begin;
+    for (begin = 0; shell_path[begin] != '/'; ++begin);
+    int end;
+    for (end = 0; shell_path[end] != '\n'; ++end);
+    int namebegin;
+    for (namebegin = end; shell_path[namebegin] != '/'; --namebegin);
+    shell_path[end] = '\0';
+    char name[end - namebegin + 1];
+    strncpy(name, shell_path + namebegin, end - namebegin + 1);
+    char *shell_argv[MAXARG];
+    shell_argv[0] = name;
+    shell_argv[1] = path;
+    for (argc = 1; argv[argc]; ++argv)
+      shell_argv[argc + 1] = argv[argc];
+    exec(shell_path + begin, shell_argv);
+  }
 
   // Check ELF header
   if(readi(ip, (char*)&elf, 0, sizeof(elf)) != sizeof(elf))
