@@ -45,6 +45,7 @@ exec(char *path, char **argv)
     char *shell_argv[MAXARG];
     shell_argv[0] = name;
     shell_argv[1] = path;
+    shell_argv[2] = (char*)0;
     for (argc = 1; argv[argc]; ++argv)
       shell_argv[argc + 1] = argv[argc];
     exec(shell_path + begin, shell_argv);
