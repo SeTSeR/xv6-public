@@ -6,7 +6,6 @@
 #include "defs.h"
 #include "x86.h"
 #include "elf.h"
-#include "shell.h"
 
 int
 exec(char *path, char **argv)
@@ -32,6 +31,7 @@ exec(char *path, char **argv)
   char shell_path[MAXPATH];
   if(readi(ip, shell_path, 0, sizeof(shell_path)) < 0)
     goto bad;
+  // Check for shebang
   if(shell_path[0] == '#' && shell_path[1] == '!') {
     int begin;
     for (begin = 0; shell_path[begin] != '/'; ++begin);
