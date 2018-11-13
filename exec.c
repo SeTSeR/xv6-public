@@ -45,10 +45,18 @@ exec(char *path, char **argv)
     char *shell_argv[MAXARG];
     shell_argv[0] = name;
     shell_argv[1] = path;
-    shell_argv[2] = (char*)0;
-    for (argc = 1; argv[argc]; ++argv)
+    for (argc = 1; argv[argc]; ++argc)
       shell_argv[argc + 1] = argv[argc];
-    exec(shell_path + begin, shell_argv);
+    shell_argv[argc + 1] = (char*)0;
+    for (argc = 0; shell_argv[argc]; ++argc)
+        argv[argc] = shell_argv[argc];
+    iunlockput(ip);
+    if((ip = namei(shell_path + begin)) == 0){
+        end_op();
+        cprintf("exec: fail\n");
+        return -1;
+    }
+    ilock(ip);
   }
 
   // Check ELF header
