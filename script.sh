@@ -1,3 +1,3 @@
-#!/sh
+#!/cat
 
 echo "Hello, world!"
