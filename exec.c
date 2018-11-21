@@ -34,11 +34,13 @@ exec(char *path, char **argv)
   // Check for shebang
   if(shell_path[0] == '#' && shell_path[1] == '!') {
     int begin;
-    for (begin = 0; shell_path[begin] != '/'; ++begin);
+    for (begin = 0; shell_path[begin] && shell_path[begin] != '/'; ++begin);
     int end;
-    for (end = 0; shell_path[end] != '\n'; ++end);
+    for (end = begin; shell_path[end] && shell_path[end] != '\n'; ++end);
     int namebegin;
     for (namebegin = end; shell_path[namebegin] != '/'; --namebegin);
+    if (!shell_path[begin] || !shell_path[end] || !shell_path[namebegin])
+      goto bad;
     shell_path[end] = '\0';
     char name[end - namebegin + 1];
     strncpy(name, shell_path + namebegin, end - namebegin + 1);
