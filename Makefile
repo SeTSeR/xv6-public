@@ -160,6 +160,10 @@ _script: script.sh
 	cp script.sh _script
 	chmod +x _script
 
+_print: print.sh
+	cp print.sh _print
+	chmod +x _print
+
 mkfs: mkfs.c fs.h
 	gcc -Werror -Wall -o mkfs mkfs.c
 
@@ -186,6 +190,7 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_script\
+	_print
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
