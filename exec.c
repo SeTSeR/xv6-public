@@ -48,15 +48,8 @@ exec(char *path, char **argv)
     for (argc = 1; argv[argc]; ++argc)
       shell_argv[argc + 1] = argv[argc];
     shell_argv[argc + 1] = (char*)0;
-    for (argc = 0; shell_argv[argc]; ++argc)
-        argv[argc] = shell_argv[argc];
-    iunlockput(ip);
-    if((ip = namei(shell_path + begin)) == 0){
-        end_op();
-        cprintf("exec: fail\n");
-        return -1;
-    }
-    ilock(ip);
+    end_op();
+    exec(shell_path + begin, shell_argv);
   }
 
   // Check ELF header
