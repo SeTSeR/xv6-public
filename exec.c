@@ -28,8 +28,8 @@ exec(char *path, char **argv)
   }
   ilock(ip);
   pgdir = 0;
-  char shell_path[MAXPATH];
-  if(readi(ip, shell_path, 0, sizeof(shell_path)) < 0)
+  char shell_path[MAXPATH] = {0};
+  if(readi(ip, shell_path, 0, sizeof(shell_path) - 1) < 2)
     goto bad;
   // Check for shebang
   if(shell_path[0] == '#' && shell_path[1] == '!') {
